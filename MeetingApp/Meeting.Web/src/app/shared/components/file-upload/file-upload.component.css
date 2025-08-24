@@ -1,0 +1,64 @@
+.file-upload-container {
+  margin-bottom: 1rem;
+}
+
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.file-input {
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.file-info {
+  margin-top: 0.5rem;
+}
+
+.file-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid #eee;
+}
+
+.file-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.file-size {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+
+.upload-progress {
+  margin-top: 1rem;
+}
+
+.progress {
+  height: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 0.75rem;
+}
+
+.progress-text {
+  font-size: 0.875rem;
+}

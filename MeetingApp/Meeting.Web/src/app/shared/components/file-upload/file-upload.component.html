@@ -1,0 +1,62 @@
+<div class="file-upload-container">
+  <div class="file-input-wrapper">
+    <input 
+      type="file" 
+      class="file-input" 
+      [accept]="accept" 
+      [multiple]="multiple" 
+      (change)="onFileChange($event)"
+      [disabled]="isUploading">
+    <button 
+      class="btn btn-outline-primary" 
+      [disabled]="isUploading || selectedFiles.length === 0"
+      (click)="uploadFiles()">
+      <span *ngIf="!isUploading">Upload File</span>
+      <span *ngIf="isUploading">
+        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Uploading...
+      </span>
+    </button>
+    <button 
+      class="btn btn-outline-secondary ms-2" 
+      (click)="clearFiles()"
+      [disabled]="selectedFiles.length === 0">
+      Clear
+    </button>
+  </div>
+  
+  <div class="file-info" *ngIf="selectedFiles.length > 0">
+    <div class="file-list">
+      <div *ngFor="let file of selectedFiles; let i = index" class="file-item">
+        <span class="file-name">{{ file.name }}</span>
+        <span class="file-size">({{ file.size | fileSize }})</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="upload-progress" *ngIf="uploadProgressData">
+    <div class="progress">
+      <div 
+        class="progress-bar" 
+        role="progressbar" 
+        [style.width.%]="uploadProgressData.progress"
+        [ngClass]="{
+          'bg-success': uploadProgressData.state === 'COMPLETED',
+          'bg-danger': uploadProgressData.state === 'ERROR'
+        }">
+        {{ uploadProgressData.progress }}%
+      </div>
+    </div>
+    <div class="progress-text">
+      <span *ngIf="uploadProgressData.state === 'IN_PROGRESS'">
+        Uploading... {{ uploadProgressData.progress }}%
+      </span>
+      <span *ngIf="uploadProgressData.state === 'COMPLETED'" class="text-success">
+        Upload completed successfully!
+      </span>
+      <span *ngIf="uploadProgressData.state === 'ERROR'" class="text-danger">
+        Upload failed: {{ uploadProgressData.error }}
+      </span>
+    </div>
+  </div>
+</div>

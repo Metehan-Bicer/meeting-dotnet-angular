@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <h3>Meeting Details</h3>
+          <button class="btn btn-secondary" (click)="navigateBack()">Back to List</button>
+        </div>
+        <div class="card-body">
+          <div *ngIf="loading" class="text-center">
+            <app-loading message="Loading meeting details..."></app-loading>
+          </div>
+          
+          <div *ngIf="meeting && !loading">
+            <div class="row mb-3">
+              <div class="col-sm-3"><strong>Title:</strong></div>
+              <div class="col-sm-9">{{ meeting.title }}</div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-sm-3"><strong>Description:</strong></div>
+              <div class="col-sm-9">{{ meeting.description || 'No description provided' }}</div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-sm-3"><strong>Start Date:</strong></div>
+              <div class="col-sm-9">{{ meeting.startDate | dateFormat:'medium' }}</div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-sm-3"><strong>End Date:</strong></div>
+              <div class="col-sm-9">{{ meeting.endDate | dateFormat:'medium' }}</div>
+            </div>
+            
+            <div class="row mb-3">
+              <div class="col-sm-3"><strong>Status:</strong></div>
+              <div class="col-sm-9">
+                <span [class]="'badge ' + (meeting.isCancelled ? 'bg-danger' : 'bg-success')">
+                  {{ meeting.isCancelled ? 'Cancelled' : 'Active' }}
+                </span>
+              </div>
+            </div>
+            
+            <div class="row mb-3" *ngIf="meeting.documentPath">
+              <div class="col-sm-3"><strong>Document:</strong></div>
+              <div class="col-sm-9">
+                <a [href]="meeting.documentPath" target="_blank" class="btn btn-outline-primary btn-sm">
+                  View Document
+                </a>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-between mt-4">
+              <button class="btn btn-primary" [routerLink]="['/meetings/edit', meeting.id]">Edit</button>
+              <button class="btn btn-danger" (click)="cancelMeeting()" [disabled]="meeting.isCancelled">
+                {{ meeting.isCancelled ? 'Already Cancelled' : 'Cancel Meeting' }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

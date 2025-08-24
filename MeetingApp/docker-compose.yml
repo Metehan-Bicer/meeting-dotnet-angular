@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Meeting.Api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Container
+    volumes:
+      - sqlite_data:/app
+    restart: on-failure
+
+  web:
+    build:
+      context: .
+      dockerfile: Meeting.Web/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: on-failure
+
+volumes:
+  sqlite_data:

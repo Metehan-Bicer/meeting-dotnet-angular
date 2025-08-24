@@ -1,0 +1,90 @@
+# .NET Core
+**/bin/
+**/obj/
+**/*.user
+**/*.suo
+**/*.userosscache
+**/*.sln.docstates
+**/packages/
+**/*.nuget.props
+**/*.nuget.targets
+
+# Visual Studio
+**/*.csproj.user
+**/*.vspscc
+**/*.vssscc
+**/*.tmp
+**/*.tmp_proj
+**/Debug/
+**/Release/
+**/x64/
+**/x86/
+**/BuildLog.*
+**/*.VC.db
+**/*.VC.VC.opendb
+
+# Visual Studio 2015+ cache/options
+.vs/
+*.sln.ide
+
+# Visual Studio 2017+ local history
+**/vshistory/
+
+# Rider
+**/.idea/
+**/_ReSharper.Caches/
+**/_ReSharper*.db
+
+# MSBuild
+**/Generated_Code/
+
+# NuGet
+**/packages/
+**/*.nuget/
+
+# ReSharper
+**/_ReSharper*/
+**/*ReSharper.Cache/
+
+# TeamCity
+**/_TeamCity/
+
+# Node.js
+node_modules/
+**/*.log
+.npm/
+.npmrc
+.npmignore
+
+# Angular
+dist/
+tmp/
+**/*.ngsummary.json
+# Exclude pack and json files from Angular
+**/*.pack
+**/*.json
+!package.json
+!tsconfig.json
+!angular.json
+!**/tsconfig.*.json
+
+# Docker
+**/.dockerignore
+**/docker-compose.override.yml
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+**/.vscode/
+**/.idea/
+
+# OS generated files
+**/Thumbs.db
+**/.DS_Store
+**/Desktop.ini
+
+# Uploads
+**/uploads/

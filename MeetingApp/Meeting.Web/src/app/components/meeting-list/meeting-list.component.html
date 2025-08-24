@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Meetings</h2>
+    <button class="btn btn-primary" routerLink="/meetings/create">Create Meeting</button>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-12" *ngIf="meetings.length === 0">
+      <p>You don't have any meetings yet.</p>
+    </div>
+    
+    <div class="col-md-6 mb-4" *ngFor="let meeting of meetings">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">{{ meeting.title }}</h5>
+          <p class="card-text">{{ meeting.description }}</p>
+          <p class="card-text">
+            <small class="text-muted">
+              {{ meeting.startDate | dateFormat:'short' }} - {{ meeting.endDate | dateFormat:'short' }}
+            </small>
+          </p>
+          <div class="d-flex justify-content-between">
+            <button class="btn btn-sm btn-outline-primary" [routerLink]="['/meetings', meeting.id]">View</button>
+            <button class="btn btn-sm btn-outline-primary" [routerLink]="['/meetings/edit', meeting.id]">Edit</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="cancelMeeting(meeting.id)">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
