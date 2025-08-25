@@ -1,11 +1,17 @@
-<div class="min-vh-100 d-flex align-items-center py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+<div
+  class="min-vh-100 d-flex align-items-center py-5"
+  style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
+>
   <div class="container-modern">
     <div class="row justify-content-center">
-      <div class="col-lg-5 col-md-7">
+      <div class="">
         <!-- Welcome Header -->
         <div class="text-center mb-5">
           <div class="mb-4">
-            <i class="fas fa-users-rectangle text-white" style="font-size: 4rem; opacity: 0.9;"></i>
+            <i
+              class="fas fa-users-rectangle text-white"
+              style="font-size: 4rem; opacity: 0.9"
+            ></i>
           </div>
           <h1 class="h2 text-white fw-bold mb-2">Welcome Back!</h1>
           <p class="text-white-50 mb-0">Sign in to your Meeting App account</p>
@@ -21,16 +27,25 @@
                   <i class="fas fa-envelope me-2 text-primary"></i>Email Address
                 </label>
                 <div class="position-relative">
-                  <input 
-                    type="email" 
-                    class="form-control" 
-                    id="email" 
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
                     formControlName="email"
                     placeholder="Enter your email address"
-                    [class.is-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
+                    [class.is-invalid]="
+                      loginForm.get('email')?.invalid &&
+                      loginForm.get('email')?.touched
+                    "
+                  />
                 </div>
-                <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" 
-                     class="invalid-feedback d-block">
+                <div
+                  *ngIf="
+                    loginForm.get('email')?.invalid &&
+                    loginForm.get('email')?.touched
+                  "
+                  class="invalid-feedback d-block"
+                >
                   <i class="fas fa-exclamation-circle me-1"></i>
                   Please enter a valid email address
                 </div>
@@ -42,16 +57,25 @@
                   <i class="fas fa-lock me-2 text-primary"></i>Password
                 </label>
                 <div class="position-relative">
-                  <input 
-                    type="password" 
-                    class="form-control" 
-                    id="password" 
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="password"
                     formControlName="password"
                     placeholder="Enter your password"
-                    [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+                    [class.is-invalid]="
+                      loginForm.get('password')?.invalid &&
+                      loginForm.get('password')?.touched
+                    "
+                  />
                 </div>
-                <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" 
-                     class="invalid-feedback d-block">
+                <div
+                  *ngIf="
+                    loginForm.get('password')?.invalid &&
+                    loginForm.get('password')?.touched
+                  "
+                  class="invalid-feedback d-block"
+                >
                   <i class="fas fa-exclamation-circle me-1"></i>
                   Password must be at least 6 characters
                 </div>
@@ -59,12 +83,16 @@
 
               <!-- Login Button -->
               <div class="d-grid mb-4">
-                <button 
-                  type="submit" 
-                  class="btn btn-primary btn-lg" 
-                  [disabled]="loginForm.invalid || loading">
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg"
+                  [disabled]="loginForm.invalid || loading"
+                >
                   <span *ngIf="loading">
-                    <div class="spinner me-2" style="width: 16px; height: 16px;"></div>
+                    <div
+                      class="spinner me-2"
+                      style="width: 16px; height: 16px"
+                    ></div>
                     Signing in...
                   </span>
                   <span *ngIf="!loading">
@@ -77,8 +105,11 @@
               <!-- Register Link -->
               <div class="text-center">
                 <p class="mb-0 text-muted">
-                  Don't have an account? 
-                  <a routerLink="/register" class="text-primary text-decoration-none fw-semibold ms-1">
+                  Don't have an account?
+                  <a
+                    routerLink="/register"
+                    class="text-primary text-decoration-none fw-semibold ms-1"
+                  >
                     Create one here
                     <i class="fas fa-arrow-right ms-1"></i>
                   </a>
@@ -87,7 +118,7 @@
             </form>
           </div>
         </div>
-        
+
         <!-- Footer -->
         <div class="text-center mt-4">
           <p class="text-white-50 small mb-0">
