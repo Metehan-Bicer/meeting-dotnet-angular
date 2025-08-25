@@ -5,6 +5,7 @@ using Meeting.Application.Services;
 using Meeting.Infrastructure.Data;
 using Meeting.Infrastructure.Jobs;
 using Meeting.Infrastructure.Repositories;
+using Meeting.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 
@@ -21,6 +22,7 @@ namespace Meeting.Api.Extensions
             // Add services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMeetingService, MeetingService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             return services;
         }
@@ -35,19 +37,20 @@ namespace Meeting.Api.Extensions
             }
 
             // Add Entity Framework
-            if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            
+            if (string.IsNullOrEmpty(connectionString))
             {
-                // Use SQLite database for development
+                // Fallback to SQLite if no connection string is configured
                 var dbPath = Path.Combine(dbDirectory, "MeetingApp.db");
                 services.AddDbContext<MeetingDbContext>(options =>
                     options.UseSqlite($"Data Source={dbPath}"));
             }
             else
             {
-                // Use SQLite for production as well (simplifying for this example)
-                var dbPath = Path.Combine(dbDirectory, "MeetingApp.db");
+                // Use SQL Server
                 services.AddDbContext<MeetingDbContext>(options =>
-                    options.UseSqlite($"Data Source={dbPath}"));
+                    options.UseSqlServer(connectionString));
             }
 
             return services;

@@ -52,7 +52,17 @@ namespace Meeting.Api.Controllers
                     return BadRequest(ApiResponse<object>.ErrorResponse("User already exists"));
                 }
 
-                // TODO: Send welcome email
+                // Send welcome email
+                try
+                {
+                    var emailService = HttpContext.RequestServices.GetRequiredService<IEmailService>();
+                    await emailService.SendWelcomeEmailAsync(user);
+                }
+                catch (Exception emailEx)
+                {
+                    _logger.LogWarning(emailEx, "Failed to send welcome email to {Email}", user.Email);
+                    // Continue with registration even if email fails
+                }
 
                 return Ok(ApiResponse<object>.SuccessResponse(
                     new { UserId = user.Id }, 

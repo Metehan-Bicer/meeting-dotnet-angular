@@ -11,6 +11,7 @@ namespace Meeting.Infrastructure.Data
 
         public DbSet<User> Users { get; set; }
         public DbSet<MeetingEntity> Meetings { get; set; }
+        public DbSet<MeetingDeleteLog> MeetingDeleteLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +42,23 @@ namespace Meeting.Infrastructure.Data
                       .WithMany()
                       .HasForeignKey(m => m.UserId)
                       .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // Configure MeetingDeleteLog entity
+            modelBuilder.Entity<MeetingDeleteLog>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+                entity.Property(e => e.MeetingId).IsRequired();
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.StartDate).IsRequired();
+                entity.Property(e => e.EndDate).IsRequired();
+                entity.Property(e => e.UserId).IsRequired();
+                entity.Property(e => e.UserName).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.UserEmail).IsRequired().HasMaxLength(100);
+                entity.Property(e => e.DeletedAt).IsRequired();
+                entity.Property(e => e.DeletedBy).IsRequired().HasMaxLength(50);
+                entity.Property(e => e.DeleteReason).HasMaxLength(200);
+                entity.Property(e => e.OriginalCreatedAt).IsRequired();
             });
         }
 

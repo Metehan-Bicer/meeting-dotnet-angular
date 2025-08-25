@@ -9,11 +9,13 @@ namespace Meeting.Application.Services
     {
         private readonly IMeetingRepository _meetingRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IEmailService _emailService;
 
-        public MeetingService(IMeetingRepository meetingRepository, IUserRepository userRepository)
+        public MeetingService(IMeetingRepository meetingRepository, IUserRepository userRepository, IEmailService emailService)
         {
             _meetingRepository = meetingRepository;
             _userRepository = userRepository;
+            _emailService = emailService;
         }
 
         public async Task<MeetingEntity?> CreateMeetingAsync(MeetingCreateDto meetingDto, int userId, string? documentPath)
@@ -34,7 +36,22 @@ namespace Meeting.Application.Services
                 UserId = userId
             };
 
-            return await _meetingRepository.CreateMeetingAsync(meeting);
+            var createdMeeting = await _meetingRepository.CreateMeetingAsync(meeting);
+            
+            // Send meeting notification email
+            if (createdMeeting != null)
+            {
+                try
+                {
+                    await _emailService.SendMeetingNotificationEmailAsync(user, createdMeeting, "Oluşturuldu");
+                }
+                catch (Exception)
+                {
+                    // Log but don't fail the meeting creation if email fails
+                }
+            }
+
+            return createdMeeting;
         }
 
         public async Task<MeetingEntity?> UpdateMeetingAsync(int meetingId, MeetingUpdateDto meetingDto)
@@ -55,9 +72,42 @@ namespace Meeting.Application.Services
             {
                 meeting.IsCancelled = true;
                 meeting.CancelledAt = DateTime.UtcNow;
+                
+                // Send cancellation email
+                var user = await _userRepository.GetUserByIdAsync(meeting.UserId);
+                if (user != null)
+                {
+                    try
+                    {
+                        await _emailService.SendMeetingCancellationEmailAsync(user, meeting);
+                    }
+                    catch (Exception)
+                    {
+                        // Log but don't fail the update if email fails
+                    }
+                }
             }
 
-            return await _meetingRepository.UpdateMeetingAsync(meeting);
+            var updatedMeeting = await _meetingRepository.UpdateMeetingAsync(meeting);
+            
+            // Send update notification email if not cancelled
+            if (updatedMeeting != null && !meetingDto.IsCancelled)
+            {
+                var user = await _userRepository.GetUserByIdAsync(meeting.UserId);
+                if (user != null)
+                {
+                    try
+                    {
+                        await _emailService.SendMeetingNotificationEmailAsync(user, updatedMeeting, "Güncellendi");
+                    }
+                    catch (Exception)
+                    {
+                        // Log but don't fail the update if email fails
+                    }
+                }
+            }
+
+            return updatedMeeting;
         }
 
         public async Task<bool> CancelMeetingAsync(int meetingId)
