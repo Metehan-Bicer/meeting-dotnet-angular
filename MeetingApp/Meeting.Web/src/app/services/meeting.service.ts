@@ -37,4 +37,12 @@ export class MeetingService extends BaseService {
   getUserMeetings(userId: number): Observable<ApiResponse<Meeting[]>> {
     return this.get<Meeting[]>(`${this.meetingApiUrl}/user/${userId}`);
   }
+
+  getMyMeetings(): Observable<ApiResponse<Meeting[]>> {
+    return this.get<Meeting[]>(`${this.meetingApiUrl}/my-meetings`);
+  }
+
+  getMeetingById(id: number): Observable<ApiResponse<Meeting>> {
+    return this.get<Meeting>(`${this.meetingApiUrl}/${id}`);
+  }
 }

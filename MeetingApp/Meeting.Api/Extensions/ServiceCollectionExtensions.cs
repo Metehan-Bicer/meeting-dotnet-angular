@@ -18,11 +18,15 @@ namespace Meeting.Api.Extensions
             // Add repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IMeetingRepository, MeetingRepository>();
+            services.AddScoped<IFileMetadataRepository, FileMetadataRepository>();
 
             // Add services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IMeetingService, MeetingService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IFileCompressionService, FileCompressionService>();
+            services.AddScoped<ISecureFileService, SecureFileService>();
+            services.AddScoped<IMySQLTriggerService, MySQLTriggerService>();
 
             return services;
         }
@@ -45,6 +49,12 @@ namespace Meeting.Api.Extensions
                 var dbPath = Path.Combine(dbDirectory, "MeetingApp.db");
                 services.AddDbContext<MeetingDbContext>(options =>
                     options.UseSqlite($"Data Source={dbPath}"));
+            }
+            else if (connectionString.Contains("3306") || connectionString.Contains("mysql", StringComparison.OrdinalIgnoreCase))
+            {
+                // Use MySQL
+                services.AddDbContext<MeetingDbContext>(options =>
+                    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
             }
             else
             {

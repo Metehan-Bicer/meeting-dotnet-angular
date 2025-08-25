@@ -54,7 +54,7 @@ namespace Meeting.Application.Services
             return createdMeeting;
         }
 
-        public async Task<MeetingEntity?> UpdateMeetingAsync(int meetingId, MeetingUpdateDto meetingDto)
+        public async Task<MeetingEntity?> UpdateMeetingAsync(int meetingId, MeetingUpdateDto meetingDto, string? documentPath = null)
         {
             var meeting = await _meetingRepository.GetMeetingByIdAsync(meetingId);
             if (meeting == null)
@@ -66,6 +66,12 @@ namespace Meeting.Application.Services
             meeting.Description = meetingDto.Description;
             meeting.StartDate = meetingDto.StartDate;
             meeting.EndDate = meetingDto.EndDate;
+            
+            // Update document path if provided
+            if (documentPath != null)
+            {
+                meeting.DocumentPath = documentPath;
+            }
             
             // Only update cancelled status if it's being set to true
             if (meetingDto.IsCancelled && !meeting.IsCancelled)

@@ -31,7 +31,7 @@ export class MeetingListComponent implements OnInit {
   }
 
   loadMeetings(): void {
-    this.meetingService.getUserMeetings(this.userId).subscribe({
+    this.meetingService.getMyMeetings().subscribe({
       next: (response) => {
         if (response.success) {
           this.meetings = response.data || [];

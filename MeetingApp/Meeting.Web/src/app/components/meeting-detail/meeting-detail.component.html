@@ -1,58 +1,144 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-          <h3>Meeting Details</h3>
-          <button class="btn btn-secondary" (click)="navigateBack()">Back to List</button>
+<div class="min-vh-100" style="background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="container-modern">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+          <h1 class="page-title">
+            <i class="fas fa-calendar-check text-gradient me-3"></i>
+            Meeting Details
+          </h1>
+          <p class="page-subtitle">View and manage meeting information</p>
         </div>
-        <div class="card-body">
-          <div *ngIf="loading" class="text-center">
-            <app-loading message="Loading meeting details..."></app-loading>
-          </div>
-          
-          <div *ngIf="meeting && !loading">
-            <div class="row mb-3">
-              <div class="col-sm-3"><strong>Title:</strong></div>
-              <div class="col-sm-9">{{ meeting.title }}</div>
-            </div>
-            
-            <div class="row mb-3">
-              <div class="col-sm-3"><strong>Description:</strong></div>
-              <div class="col-sm-9">{{ meeting.description || 'No description provided' }}</div>
-            </div>
-            
-            <div class="row mb-3">
-              <div class="col-sm-3"><strong>Start Date:</strong></div>
-              <div class="col-sm-9">{{ meeting.startDate | dateFormat:'medium' }}</div>
-            </div>
-            
-            <div class="row mb-3">
-              <div class="col-sm-3"><strong>End Date:</strong></div>
-              <div class="col-sm-9">{{ meeting.endDate | dateFormat:'medium' }}</div>
-            </div>
-            
-            <div class="row mb-3">
-              <div class="col-sm-3"><strong>Status:</strong></div>
-              <div class="col-sm-9">
-                <span [class]="'badge ' + (meeting.isCancelled ? 'bg-danger' : 'bg-success')">
+        <button class="btn btn-secondary" (click)="navigateBack()">
+          <i class="fas fa-arrow-left me-2"></i>
+          Back to List
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="container-modern py-4">
+    <!-- Loading State -->
+    <div *ngIf="loading" class="text-center py-5">
+      <div class="spinner mb-3"></div>
+      <p class="text-muted">Loading meeting details...</p>
+    </div>
+    
+    <!-- Meeting Details -->
+    <div *ngIf="meeting && !loading" class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-md">
+          <!-- Meeting Header -->
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+              <div>
+                <h2 class="h3 mb-2 fw-bold">{{ meeting.title }}</h2>
+                <span class="badge rounded-pill fs-6" 
+                      [ngClass]="meeting.isCancelled ? 'bg-danger' : 'bg-success'">
+                  <i class="fas" [ngClass]="meeting.isCancelled ? 'fa-times' : 'fa-check'"></i>
                   {{ meeting.isCancelled ? 'Cancelled' : 'Active' }}
                 </span>
               </div>
-            </div>
-            
-            <div class="row mb-3" *ngIf="meeting.documentPath">
-              <div class="col-sm-3"><strong>Document:</strong></div>
-              <div class="col-sm-9">
-                <a [href]="meeting.documentPath" target="_blank" class="btn btn-outline-primary btn-sm">
-                  View Document
-                </a>
+              <div class="text-muted small">
+                <i class="fas fa-calendar-plus me-1"></i>
+                Created {{ meeting.createdAt | dateFormat:'dateOnly' }}
               </div>
             </div>
-            
-            <div class="d-flex justify-content-between mt-4">
-              <button class="btn btn-primary" [routerLink]="['/meetings/edit', meeting.id]">Edit</button>
-              <button class="btn btn-danger" (click)="cancelMeeting()" [disabled]="meeting.isCancelled">
+          </div>
+
+          <div class="card-body">
+            <!-- Description -->
+            <div class="mb-4">
+              <h5 class="fw-semibold mb-3">
+                <i class="fas fa-align-left text-primary me-2"></i>
+                Description
+              </h5>
+              <div class="bg-light p-3 rounded border-radius-md">
+                <p class="mb-0">{{ meeting.description || 'No description provided' }}</p>
+              </div>
+            </div>
+
+            <!-- Date & Time Info -->
+            <div class="row mb-4">
+              <div class="col-md-6">
+                <h5 class="fw-semibold mb-3">
+                  <i class="fas fa-clock text-success me-2"></i>
+                  Schedule
+                </h5>
+                <div class="bg-success bg-opacity-10 p-3 rounded border-radius-md">
+                  <div class="d-flex align-items-center mb-2">
+                    <i class="fas fa-play text-success me-3"></i>
+                    <div>
+                      <small class="text-muted d-block">Start Date & Time</small>
+                      <strong>{{ meeting.startDate | dateFormat:'long' }}</strong>
+                    </div>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <i class="fas fa-stop text-danger me-3"></i>
+                    <div>
+                      <small class="text-muted d-block">End Date & Time</small>
+                      <strong>{{ meeting.endDate | dateFormat:'long' }}</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="col-md-6 mt-4 mt-md-0">
+                <h5 class="fw-semibold mb-3">
+                  <i class="fas fa-info-circle text-info me-2"></i>
+                  Meeting Info
+                </h5>
+                <div class="bg-info bg-opacity-10 p-3 rounded border-radius-md">
+                  <div class="mb-2">
+                    <small class="text-muted d-block">Status</small>
+                    <span class="fw-semibold" [class]="meeting.isCancelled ? 'text-danger' : 'text-success'">
+                      {{ meeting.isCancelled ? 'Cancelled' : 'Active' }}
+                    </span>
+                  </div>
+                  <div *ngIf="meeting.cancelledAt">
+                    <small class="text-muted d-block">Cancelled Date</small>
+                    <span class="fw-semibold text-danger">{{ meeting.cancelledAt | dateFormat:'medium' }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Document Section -->
+            <div class="mb-4">
+              <h5 class="fw-semibold mb-3">
+                <i class="fas fa-paperclip text-warning me-2"></i>
+                Attached Document
+              </h5>
+              
+              <div *ngIf="meeting.documentPath" class="bg-warning bg-opacity-10 p-3 rounded border-radius-md">
+                <div class="d-flex align-items-center">
+                  <i class="fas fa-file-alt text-warning me-3" style="font-size: 1.5rem;"></i>
+                  <div>
+                    <strong class="d-block">{{ getDocumentName(meeting.documentPath) }}</strong>
+                    <small class="text-muted">Meeting document attached</small>
+                  </div>
+                </div>
+              </div>
+              
+              <div *ngIf="!meeting.documentPath" class="bg-light p-3 rounded border-radius-md text-center">
+                <i class="fas fa-file-slash text-muted mb-2" style="font-size: 2rem;"></i>
+                <p class="text-muted mb-0">No document attached to this meeting</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="card-footer bg-transparent">
+            <div class="d-flex justify-content-center gap-3 flex-wrap">
+              <button class="btn btn-primary btn-lg" [routerLink]="['/meetings/edit', meeting.id]">
+                <i class="fas fa-edit me-2"></i>
+                Edit Meeting
+              </button>
+              
+              <button class="btn btn-danger btn-lg" (click)="cancelMeeting()" [disabled]="meeting.isCancelled">
+                <i class="fas fa-times me-2"></i>
                 {{ meeting.isCancelled ? 'Already Cancelled' : 'Cancel Meeting' }}
               </button>
             </div>

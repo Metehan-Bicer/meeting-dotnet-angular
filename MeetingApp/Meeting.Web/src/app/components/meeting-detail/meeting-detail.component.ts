@@ -28,9 +28,23 @@ export class MeetingDetailComponent implements OnInit {
   }
 
   loadMeeting(id: number): void {
-    // In a real implementation, you would have a method to get a single meeting
-    // For now, we'll redirect to the meeting list
-    this.router.navigate(['/meetings']);
+    this.loading = true;
+    this.meetingService.getMeetingById(id).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success && response.data) {
+          this.meeting = response.data;
+        } else {
+          this.notificationService.showError(response.message || 'Error loading meeting');
+          this.router.navigate(['/meetings']);
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.notificationService.showError('Error loading meeting');
+        this.router.navigate(['/meetings']);
+      }
+    });
   }
 
   cancelMeeting(): void {
@@ -53,5 +67,11 @@ export class MeetingDetailComponent implements OnInit {
 
   navigateBack(): void {
     this.router.navigate(['/meetings']);
+  }
+
+  getDocumentName(path: string | null | undefined): string {
+    if (!path) return 'Unknown file';
+    const pathParts = path.split('/');
+    return pathParts[pathParts.length - 1];
   }
 }

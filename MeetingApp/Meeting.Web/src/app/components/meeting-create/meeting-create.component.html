@@ -1,53 +1,263 @@
-<div class="container">
-  <div class="row justify-content-center">
-    <div class="col-md-8">
-      <div class="card">
-        <div class="card-header">
-          <h3>Create Meeting</h3>
+<div
+  class="min-vh-100"
+  style="
+    background: linear-gradient(
+      135deg,
+      var(--bg-secondary) 0%,
+      var(--bg-tertiary) 100%
+    );
+  "
+>
+  <!-- Header -->
+  <div class="page-header">
+    <div class="container-modern">
+      <!-- <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div>
+          <h1 class="page-title">
+            <i class="fas" [ngClass]="isEditMode ? 'fa-edit' : 'fa-plus'" class="text-gradient me-3"></i>
+            {{ isEditMode ? 'Update Meeting' : 'Create Meeting' }}
+          </h1>
+          <p class="page-subtitle">{{ isEditMode ? 'Modify your meeting details' : 'Schedule a new meeting' }}</p>
         </div>
-        <div class="card-body">
-          <form [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
-            <div class="mb-3">
-              <label for="title" class="form-label">Title</label>
-              <input type="text" class="form-control" id="title" formControlName="title">
-              <div *ngIf="meetingForm.get('title')?.invalid && meetingForm.get('title')?.touched" class="text-danger">
-                Title is required
-              </div>
-            </div>
-            
-            <div class="mb-3">
-              <label for="description" class="form-label">Description</label>
-              <textarea class="form-control" id="description" formControlName="description" rows="3"></textarea>
-            </div>
-            
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="startDate" class="form-label">Start Date</label>
-                <input type="datetime-local" class="form-control" id="startDate" formControlName="startDate">
-                <div *ngIf="meetingForm.get('startDate')?.invalid && meetingForm.get('startDate')?.touched" class="text-danger">
-                  Start date is required
+        <button class="btn btn-secondary" routerLink="/meetings">
+          <i class="fas fa-times me-2"></i>
+          Cancel
+        </button>
+      </div> -->
+    </div>
+  </div>
+
+  <!-- Content -->
+  <div class="container-modern py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="card shadow-md">
+          <div class="card-body p-4">
+            <form [formGroup]="meetingForm" (ngSubmit)="onSubmit()">
+              <!-- Title Field -->
+              <div class="form-group">
+                <label for="title" class="form-label">
+                  <i class="fas fa-heading text-primary me-2"></i>
+                  Meeting Title <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  formControlName="title"
+                  placeholder="Enter meeting title"
+                  [class.is-invalid]="
+                    meetingForm.get('title')?.invalid &&
+                    meetingForm.get('title')?.touched
+                  "
+                />
+                <div
+                  *ngIf="
+                    meetingForm.get('title')?.invalid &&
+                    meetingForm.get('title')?.touched
+                  "
+                  class="invalid-feedback d-block"
+                >
+                  <i class="fas fa-exclamation-circle me-1"></i>
+                  Title is required
                 </div>
               </div>
-              
-              <div class="col-md-6 mb-3">
-                <label for="endDate" class="form-label">End Date</label>
-                <input type="datetime-local" class="form-control" id="endDate" formControlName="endDate">
-                <div *ngIf="meetingForm.get('endDate')?.invalid && meetingForm.get('endDate')?.touched" class="text-danger">
-                  End date is required
+
+              <!-- Description Field -->
+              <div class="form-group">
+                <label for="description" class="form-label">
+                  <i class="fas fa-align-left text-primary me-2"></i>
+                  Description
+                  <small class="text-muted">(Optional)</small>
+                </label>
+                <textarea
+                  class="form-control"
+                  id="description"
+                  formControlName="description"
+                  rows="4"
+                  placeholder="Describe the meeting purpose, agenda, or any additional notes..."
+                  style="resize: vertical"
+                ></textarea>
+                <div class="form-text">
+                  <i class="fas fa-info-circle me-1"></i>
+                  Add any relevant details about the meeting
                 </div>
               </div>
-            </div>
-            
-            <div class="mb-3">
-              <label for="document" class="form-label">Document</label>
-              <input type="file" class="form-control" id="document" (change)="onFileSelected($event)">
-            </div>
-            
-            <div class="d-flex justify-content-between">
-              <button type="button" class="btn btn-secondary" routerLink="/meetings">Cancel</button>
-              <button type="submit" class="btn btn-primary" [disabled]="meetingForm.invalid">Create Meeting</button>
-            </div>
-          </form>
+
+              <!-- Date & Time Fields -->
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="startDate" class="form-label">
+                      <i class="fas fa-play text-success me-2"></i>
+                      Start Date & Time <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      id="startDate"
+                      formControlName="startDate"
+                      [class.is-invalid]="
+                        meetingForm.get('startDate')?.invalid &&
+                        meetingForm.get('startDate')?.touched
+                      "
+                    />
+                    <div
+                      *ngIf="
+                        meetingForm.get('startDate')?.invalid &&
+                        meetingForm.get('startDate')?.touched
+                      "
+                      class="invalid-feedback d-block"
+                    >
+                      <i class="fas fa-exclamation-circle me-1"></i>
+                      Start date is required
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="endDate" class="form-label">
+                      <i class="fas fa-stop text-danger me-2"></i>
+                      End Date & Time <span class="text-danger">*</span>
+                    </label>
+                    <input
+                      type="datetime-local"
+                      class="form-control"
+                      id="endDate"
+                      formControlName="endDate"
+                      [class.is-invalid]="
+                        meetingForm.get('endDate')?.invalid &&
+                        meetingForm.get('endDate')?.touched
+                      "
+                    />
+                    <div
+                      *ngIf="
+                        meetingForm.get('endDate')?.invalid &&
+                        meetingForm.get('endDate')?.touched
+                      "
+                      class="invalid-feedback d-block"
+                    >
+                      <i class="fas fa-exclamation-circle me-1"></i>
+                      End date is required
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Document Upload -->
+              <div class="form-group">
+                <label for="document" class="form-label">
+                  <i class="fas fa-paperclip text-warning me-2"></i>
+                  Attach Document
+                  <small class="text-muted">(Optional)</small>
+                </label>
+
+                <!-- Show existing document info in edit mode -->
+                <div
+                  *ngIf="isEditMode && existingDocumentPath"
+                  class="alert alert-info border-0 mb-3"
+                >
+                  <div class="d-flex align-items-center">
+                    <i
+                      class="fas fa-file-alt text-info me-3"
+                      style="font-size: 1.5rem"
+                    ></i>
+                    <div>
+                      <strong class="d-block"
+                        >Current document: {{ existingDocumentName }}</strong
+                      >
+                      <small class="text-muted"
+                        >Upload a new file to replace the current
+                        document</small
+                      >
+                    </div>
+                  </div>
+                </div>
+
+                <input
+                  type="file"
+                  class="form-control"
+                  id="document"
+                  (change)="onFileSelected($event)"
+                  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.jpg,.jpeg,.png,.gif"
+                />
+                <div class="form-text">
+                  <i class="fas fa-info-circle me-1"></i>
+                  Supported formats: PDF, Word, Excel, PowerPoint, Text, Images
+                  (Max 10MB)
+                </div>
+              </div>
+
+              <!-- Form Actions -->
+              <div
+                class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top"
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary btn-lg"
+                  routerLink="/meetings"
+                >
+                  <i class="fas fa-times me-2"></i>
+                  Cancel
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn btn-primary btn-lg"
+                  [disabled]="meetingForm.invalid || loading"
+                >
+                  <span *ngIf="loading">
+                    <div
+                      class="spinner me-2"
+                      style="width: 16px; height: 16px"
+                    ></div>
+                    Processing...
+                  </span>
+                  <span *ngIf="!loading">
+                    <i
+                      class="fas"
+                      [ngClass]="isEditMode ? 'fa-save' : 'fa-plus'"
+                      class="me-2"
+                    ></i>
+                    {{ isEditMode ? "Update Meeting" : "Create Meeting" }}
+                  </span>
+                </button>
+              </div>
+
+              <!-- Mobile Actions -->
+              <!-- <div class="btn-group-mobile d-md-none mt-3">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  routerLink="/meetings"
+                >
+                  <i class="fas fa-times me-2"></i>Cancel
+                </button>
+                <button
+                  type="submit"
+                  class="btn btn-primary"
+                  [disabled]="meetingForm.invalid || loading"
+                >
+                  <span *ngIf="loading">
+                    <div
+                      class="spinner me-2"
+                      style="width: 16px; height: 16px"
+                    ></div>
+                    Processing...
+                  </span>
+                  <span *ngIf="!loading">
+                    <i
+                      class="fas"
+                      [ngClass]="isEditMode ? 'fa-save' : 'fa-plus'"
+                      class="me-2"
+                    ></i>
+                    {{ isEditMode ? "Update Meeting" : "Create Meeting" }}
+                  </span>
+                </button>
+              </div> -->
+            </form>
+          </div>
         </div>
       </div>
     </div>

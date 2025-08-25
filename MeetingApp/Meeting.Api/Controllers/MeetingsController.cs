@@ -35,8 +35,13 @@ namespace Meeting.Api.Controllers
                     return BadRequest(ApiResponse<object>.ErrorResponse(errors, "Validation failed"));
                 }
 
-                // Get user ID from JWT token (simplified for now)
-                var userId = 1; // This should come from the authenticated user
+                // Get user ID from JWT token
+                var userIdClaim = User.FindFirst("userId")?.Value ?? User.FindFirst("id")?.Value;
+                if (!int.TryParse(userIdClaim, out var userId))
+                {
+                    // Fallback to hard-coded for development
+                    userId = 1;
+                }
 
                 // Save document if provided
                 string? documentPath = null;
@@ -83,14 +88,7 @@ namespace Meeting.Api.Controllers
                     documentPath = await _fileStorageService.SaveFileAsync(document, "documents");
                 }
 
-                // Update document path if new document was uploaded
-                if (documentPath != null)
-                {
-                    // In a real implementation, you would update the meeting with the new document path
-                    // For now, we're just showing how to handle file uploads
-                }
-
-                var meeting = await _meetingService.UpdateMeetingAsync(id, meetingDto);
+                var meeting = await _meetingService.UpdateMeetingAsync(id, meetingDto, documentPath);
 
                 if (meeting == null)
                 {
@@ -158,6 +156,56 @@ namespace Meeting.Api.Controllers
             {
                 _logger.LogError(ex, "Error retrieving user meetings");
                 return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while retrieving user meetings"));
+            }
+        }
+
+        [HttpGet("my-meetings")]
+        public async Task<IActionResult> GetMyMeetings()
+        {
+            try
+            {
+                // Get user ID from JWT token
+                var userIdClaim = User.FindFirst("userId")?.Value ?? User.FindFirst("id")?.Value;
+                if (!int.TryParse(userIdClaim, out var userId))
+                {
+                    // Fallback to hard-coded for development
+                    userId = 1;
+                }
+
+                var meetings = await _meetingService.GetUserMeetingsAsync(userId);
+                return Ok(ApiResponse<object>.SuccessResponse(meetings, "My meetings retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving my meetings");
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while retrieving my meetings"));
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetMeetingById(int id)
+        {
+            try
+            {
+                // Get user ID from JWT token
+                var userIdClaim = User.FindFirst("userId")?.Value ?? User.FindFirst("id")?.Value;
+                if (!int.TryParse(userIdClaim, out var userId))
+                {
+                    userId = 1;
+                }
+
+                var meeting = await _meetingService.GetMeetingByIdAsync(id);
+                if (meeting == null || meeting.UserId != userId)
+                {
+                    return NotFound(ApiResponse<object>.ErrorResponse("Meeting not found"));
+                }
+
+                return Ok(ApiResponse<object>.SuccessResponse(meeting, "Meeting retrieved successfully"));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error retrieving meeting");
+                return StatusCode(500, ApiResponse<object>.ErrorResponse("An error occurred while retrieving meeting"));
             }
         }
     }

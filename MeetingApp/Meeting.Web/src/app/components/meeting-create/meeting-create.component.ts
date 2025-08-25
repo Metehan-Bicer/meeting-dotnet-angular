@@ -16,6 +16,8 @@ export class MeetingCreateComponent implements OnInit {
   isEditMode = false;
   meetingId: number | null = null;
   loading = false;
+  existingDocumentPath: string | null = null;
+  existingDocumentName: string | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -38,8 +40,43 @@ export class MeetingCreateComponent implements OnInit {
       if (params['id']) {
         this.isEditMode = true;
         this.meetingId = +params['id'];
-        // In a real app, you would load the meeting data here
-        // this.loadMeeting(this.meetingId);
+        this.loadMeeting(this.meetingId);
+      }
+    });
+  }
+
+  loadMeeting(id: number): void {
+    this.loading = true;
+    this.meetingService.getMeetingById(id).subscribe({
+      next: (response) => {
+        this.loading = false;
+        if (response.success && response.data) {
+          const meeting = response.data;
+          // Format dates for datetime-local input
+          const startDate = new Date(meeting.startDate).toISOString().slice(0, 16);
+          const endDate = new Date(meeting.endDate).toISOString().slice(0, 16);
+          
+          this.meetingForm.patchValue({
+            title: meeting.title,
+            description: meeting.description,
+            startDate: startDate,
+            endDate: endDate
+          });
+
+          // Set existing document info
+          this.existingDocumentPath = meeting.documentPath || null;
+          if (meeting.documentPath) {
+            // Extract filename from path
+            const pathParts = meeting.documentPath.split('/');
+            this.existingDocumentName = pathParts[pathParts.length - 1];
+          }
+        } else {
+          this.notificationService.showError(response.message || 'Error loading meeting');
+        }
+      },
+      error: (error) => {
+        this.loading = false;
+        this.notificationService.showError('Error loading meeting');
       }
     });
   }
